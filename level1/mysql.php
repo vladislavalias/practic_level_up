@@ -1,26 +1,55 @@
 <?php
-try
-{
-$db = new PDO('mysql:host=localhost;dbname=test_classes');
-  echo "Connected<p>";
-}
-catch (Exception $e)
-{
-  echo "Unable to connect: " . $e->getMessage() ."<p>";
-}
 
-
-try
+class mysql
 {
-  $stmt       = $db->query('SELECT users.name, users.rating, city.city FROM `users` '
-          . 'LEFT JOIN `city` ON users.city_id = city.city_id ORDER BY rating DESC');
-  $result     = $stmt->fetchAll();
-}
-catch(PDOException $e)
-{
-  echo 'Error : '.$e->getMessage();
-  exit();
-}
+  protected $db;
+  
+  public function __construct()
+  {
+    $this->setConnection(new PDO('mysql:host=localhost;dbname=test_classes'));
+  }
+  
+  /**
+   * @return PDO
+   */
+  protected function getConnection()
+  {
+    return $this->db;
+  }
+  
+  /**
+   * 
+   * @param PDO $connection
+   * @return PDO
+   */
+  protected function setConnection($connection)
+  {
+    return $this->db = $connection;
+  }
 
-var_dump($result);
+  /**
+   * 
+   * @param string $query
+   * @param array $where
+   * @return mixed
+   */
+  public function query($query, $where = array())
+  {
+    $result = FALSE;
+    $stmt = $this->getConnection()->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+    if($stmt->execute($where))
+    {
+      if (preg_match('/^SELECT/', $query))
+      {
+        $result = $stmt->fetchAll();
+        return $result;
+      }
+      else
+      {
+        return true;
+      }
+    }
+    return $result;
+  }
+}
 
