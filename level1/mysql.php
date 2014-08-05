@@ -4,9 +4,53 @@ class mysql
 {
   protected $db;
   
-  public function __construct()
+  private $defaultConfiguration = array(
+    'host'      => false,
+    'dbname'    => false,
+    'user'      => false,
+    'password'  => false
+  );
+  
+  private $necessaryParameters = array(
+      'host', 'dbname'
+  );
+
+  protected function isValidConfiguration($configuration)
   {
-    $this->setConnection(new PDO('mysql:host=localhost;dbname=test_classes'));
+    $configuration = is_array($configuration) ? $configuration : array($configuration);
+    
+    $cleared      = array_diff($configuration, array('', false, null));
+    $presentAll   = array_intersect_key(
+      $configuration,
+      $this->defaultConfiguration
+    );
+    
+    $presentNecessary = array_intersect_key(
+      $cleared,
+      array_flip($this->necessaryParameters)
+    );
+    
+    return sizeof($this->necessaryParameters) == sizeof($presentNecessary) &&
+      sizeof($presentAll) == sizeof($this->defaultConfiguration); 
+  }
+
+  public function __construct($configuration)
+  {
+    if (!$this->isValidConfiguration($configuration)) return false;
+    
+    $pdo = sprintf(
+      'mysql:host=%s;dbname=%s',
+      $configuration['host'],
+      $configuration['dbname']
+    );
+    
+    $this->setConnection(
+      new PDO(
+        $pdo,
+        $configuration['user'],
+        $configuration['password']
+      )
+    );
   }
   
   /**
