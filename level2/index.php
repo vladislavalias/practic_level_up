@@ -29,7 +29,6 @@ if (isset($post['Click']))
     $query = sprintf('UPDATE `users` set rating=rating+%d WHERE name=\'%s\'', 1, $_SESSION['login']);
     $db->query($query);
 }
-
 require_once 'view.php';
 
 

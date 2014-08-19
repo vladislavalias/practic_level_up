@@ -70,7 +70,7 @@ class html
       }
       elseif (is_int($key))
       {
-        $param = strpos($_SESSION['login'], $param) !== false ? '<b>'.$param.'</b>(это Вы)' : $param;
+        $param = $_SESSION['login'] == $param ? '<b>'.$param.'</b>(это Вы)' : $param;
         $table .= self::openTag.$elementTable.self::closeTag;
         $table .=  $param ;
         $table .= self::openClosingTag.$elementTable.self::closeTag;

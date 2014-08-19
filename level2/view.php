@@ -18,7 +18,6 @@ $html = new html();
             <h3>Рейтинг лучших кликеров:</h3>
             <?php $result = $db->query('SELECT users.name, users.rating, '
                     . 'city.city FROM users LEFT JOIN city ON users.city_id = city.id ORDER BY rating DESC');
-
                   echo $html->createTable($result);
                   echo $html->form(templates::$arrayFormElementsClick, 'Накликай рейтинг!') ?>
                   <a href="index.php?exit=1">Выйти</a>
