@@ -15,7 +15,7 @@ ini_set('display_errors', 1);
 require_once 'lib/emailParser.php';
 
 $parser     = new emailParser();
-$parsedData = $parser->getDataFrom('data/email.csv');
+$parsedData = $parser->getDataFrom('email/email.txt');
 
 if (is_array($parsedData))
 {
