@@ -2,12 +2,41 @@
 
 class emailParser
 {
-  /**
+    /**
+     * Массив данных для отображения
+     * @param string $fileName
+     * @param string $startSelector
+     * @param string $finishSelector
+     * @return array
+     */
+    public function toShow($fileName, $startSelector, $finishSelector)
+    {
+        $startSelector  = !$startSelector ? '2015-01-01' : $startSelector;
+        $finishSelector = !$finishSelector ?  '1990-01-01' : $finishSelector;
+        $result = array();
+        $data = $this->getDataFrom($fileName);
+        foreach ($data as $startDate => $arrayByFinishDate)
+        {
+            if ($startSelector > $startDate)
+            {
+                foreach ($arrayByFinishDate as $finishDate => $value)
+                {
+                    if ($finishDate > $finishSelector)
+                    {
+                        $result[] = $value;
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+    
+    /**
    * Return parsed data from file by fileName.
    * @param string $fileName
    * @return array
    */
-  public function getDataFrom($fileName)
+  private function getDataFrom($fileName)
   {
     return $this->parseData(
       $this->readFile($fileName)
@@ -21,13 +50,16 @@ class emailParser
    */
   protected function parseData($content)
   {
-    $result       = array();
-    $splitLines   = explode("\n", $content);
+    $splitLines          = explode($this->chooseDelimeter(), $content);
+    $splitLinesCleared   = array_diff($splitLines, array('', ' ', NULL, FALSE));
     
-    foreach ($splitLines as $line)
+    foreach ($splitLinesCleared as $line)
     {
-      $arrayElement = explode(' ', $line);
-      $this->arrayParsedData[$this->getdate($arrayElement[1])][$this->getdate($arrayElement[2])][] = array($arrayElement[0], $arrayElement[1], $arrayElement[2]);
+      $arrayElement = explode('"', $line);
+      $arrayElementCleared = array_diff($arrayElement, array('', ' ', NULL, FALSE));
+//      var_dump($arrayElement);      exit();
+//      счастливой отладки, суки
+      $this->arrayParsedData[$this->getdate($arrayElementCleared[1])][$this->getdate($arrayElementCleared[3])][] = array($arrayElementCleared[0], $arrayElementCleared[1], $arrayElementCleared[3]);
     }
     
     return $this->arrayParsedData;
@@ -65,6 +97,22 @@ class emailParser
     $date = explode(' ', $dateTime);
     
     return $date[0];
+  }
+  
+  private function chooseDelimeter()
+  {
+      if (strpos(filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'), 'Windows'))
+      {
+          return "\r\n";
+      }
+      elseif (strpos(filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'), 'Linux'))
+      {
+          return "\n";
+      }
+      else
+      {
+          return "\r";
+      }
   }
 }
 
