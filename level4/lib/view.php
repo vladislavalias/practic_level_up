@@ -2,23 +2,21 @@
 
 class view
 {
-    public function show($arrayDataEmails)
+    public function show($array)
     {
-        $view = '<table border="1">';
+      if ($array)
+      {
+        $arrayDataEmails = array_slice($array, 0, 20);
         foreach ($arrayDataEmails as $arrayDataEmail)
         {
-            $view .= '<tr>';
-            foreach ($arrayDataEmail as $dataEmail)
-            {
-                foreach ($dataEmail as $element)
-                {
-                    $view .= '<td>'.$element.'</td>';
-                }
-            }
-            $view .= '</tr>';
+          echo $arrayDataEmail.'<br />';
         }
-        $view .= '</table>';
-        return $view;
+      }
+      else
+      {
+        echo 'Ничего не найдено. Измените параметры запроса.<br />';
+      }
+      echo '<br />';
     }
 }
 

@@ -9,7 +9,7 @@ require_once 'email/writeData.php';
 $construct = new construct();
 $write = new writeData();
 
-$emailString = $construct->emailDateString(100);
+$emailString = $construct->emailDateString(30000);
 $write->write('email/email.txt', $emailString);
 
 //$handle = fopen('email/email.txt', 'a');

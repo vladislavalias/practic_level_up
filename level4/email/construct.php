@@ -30,7 +30,16 @@ class construct
     private function email()
     {
         $availableSymbols = '123456789abcdefghijklnmopqrstuvwxyz';
-        $availableEmail   = array('yandex.ua', 'google.com', 'i.ua');
+        $availableEmail   = array(
+                                  'yandex.ua', 
+                                  'google.com', 
+                                  'i.ua',
+                                  'yahoo.ua',
+                                  'mail.ru',
+                                  'e-mail.ua',
+                                  'yandex.ru',
+                                  'swift.net'
+                                  );
         $name = '';
         $lenght = mt_rand(3, 15);
         for ($i = 0; $i < $lenght; $i++)
