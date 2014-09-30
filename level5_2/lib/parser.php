@@ -33,7 +33,7 @@ class parser
  */
   public function statistic($file)
   {
-    $statistic = $this->template;
+    $statistic = array();
     
     $handle = fopen($file, 'r');
 
@@ -44,30 +44,30 @@ class parser
       $n = sscanf($content, '%s %s %s %s %s %s', $name, $domain, $startDate, $startTime, $finishDate, $finishTime); 
 
       $firstSymbol = $name[0];
-      $lenght = strlen($name);
-      
-      $this->increment($statistic, 'lenght', $lenght);
-      $this->increment($statistic, 'domain', $domain);
-      $this->increment($statistic, 'firstSymbol', $firstSymbol);
-      $this->increment($statistic, 'startDate', $startDate);
-      $this->increment($statistic, 'startTime', $startTime);
-      $this->increment($statistic, 'finishDate', $finishDate);
-      $this->increment($statistic, 'finishTime', $finishTime);
+      $length = strlen($name);
+      $this->counter('lenght', $length);
+      $this->counter('domain', $domain);
+      $this->counter('firstSymbol', $firstSymbol);
+      $this->counter('startDate', $startDate);
+      $this->counter('startTime', $startTime);
+      $this->counter('finishDate', $finishDate);
+      $this->counter('finishTime', $finishTime);
     }
     fclose($handle);
     
-    return $statistic;
+    return $this->template;
   }
   
-  private function increment($array, $key1, $key2)
+  private function counter($key1, $key2)
   {
-    if (!isset($array[$key1][$key2]))
+    $statistic = &$this->template;
+    if (!isset($statistic[$key1][$key2]))
     {
-      $array[$key1][$key2] = 1;
+      $statistic[$key1][$key2] = 1;
     }
     else
     {
-      $array[$key1][$key2] += 1;
+      $statistic[$key1][$key2] += 1;
     }
   }
   
